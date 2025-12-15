@@ -92,7 +92,7 @@ See `recommend.py` for more details.
 
 3. Check if there is a lemma utilized in the proof body
 
-4. Successful recommendation for ~43% of proofs. We exclude a proof if it does not contain any lemma call from 1000 lemma pool.
+4. Successful recommendation for ~44% of proofs. We exclude a proof if it does not contain any lemma call from 1000 lemma pool.
   
 <!-- Q: CodeBERT-mlm, CodeBERT, DafnyBERT-mlm, DafnyBERT-rec  before dafny training     -->
 

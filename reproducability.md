@@ -53,3 +53,17 @@ Run these sequentially.
 
 
 
+## Expected Output
+
+31 success among 70 cases.
+Among 230 proofs extracted, 160 of them were excluded, it was not possible to recommend a lemma 
+(i.e., there is no lemma usage -- from the 1000 lemma pool).
+
+```
+==================================================
+EVALUATION SUMMARY
+==================================================
+...
+Result: Success Rate (Used Lemma Recovery) excluding goals with no useful lemma in pool: 44.29%
+```
+
