@@ -17,9 +17,8 @@ os.environ["WANDB_SILENT"] = "true"
 DATA_PATH = "/content/drive/MyDrive/dafny-encoder/dafny-data.json"
 
 MODEL_NAME = "huggingface/CodeBERTa-small-v1"
-OUTPUT_PATH = "./output/dafny-codeberta-contrastive"
+OUTPUT_PATH = "/content/drive/MyDrive/dafny-encoder/dafny-codeberta-contrastive"
 BATCH_SIZE = 16 # Small batch size for small GPUs; MNR loss benefits from larger batches if VRAM allows
-# 64 failed in Colab with OOM
 NUM_EPOCHS = 3
 LEARNING_RATE = 2e-5
 MAX_SEQ_LENGTH = 512
@@ -118,6 +117,7 @@ def main():
     # 4. Define Loss Function
     # MultipleNegativesRankingLoss:
     # For a pair (a, b), 'b' is the positive for 'a', and ALL other 'b's in the batch are negatives.
+    # TODO: a = (prog1, post1), b = (prog1, post2), then post2 is not really a negative for prog1.
     train_loss = losses.MultipleNegativesRankingLoss(model=model)
 
     # 5. (Optional) Define Evaluator
