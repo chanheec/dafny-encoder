@@ -1,23 +1,28 @@
 # Dafny encoder
 
+
+A Dafny function is annotated with its specification: (1) requires clauses (assumptions on the function's input, aka precondition)
+and (2) ensures clauses (properties of the function's output, aka postcondition).
+
 A Dafny function's signature includes 
 function name, 
 input arguments (and their types),
-requires clauses (assumptions on the function's input, aka precondition), and
-ensures clauses (properties of the function's output, aka postcondition).
+requires clauses,
+and ensures clauses.
 
 Based on a function's signature,
-our model recommends the most relevant Dafny functions.
+this model can recommend the most relevant Dafny functions.
 
 
 
 
 # Data Collection
 
-While there are a few dataset for Dafny,
-the size of dataset is small and/or the contained dafny functions are tiny.
+While there are a few dataset for Dafny readily available,
+the size of dataset is small or the contained dafny functions are relatively small.
 
-As a part of this project, I developed a data collection tool at this repository: 
+Therefore, as a part of this project, I developed a data collection tool,
+which is located at this repository: 
 https://github.com/chanheec/dafny-extractor
 
 
@@ -37,9 +42,9 @@ At a high level, instead of (comment, program) pair, we utilize (proof goal, pro
 
 
 
-##  Pre-training for Dafny using masked language modeling (MLM)
+## Method part1: Pre-training for Dafny using masked language modeling (MLM)
 
-We train our model based on `codebert-base-mlm` (https://huggingface.co/microsoft/codebert-base-mlm).
+Our model is based on `codebert-base-mlm` (https://huggingface.co/microsoft/codebert-base-mlm).
 
 First, as in CodeBERT/Roberta, we merge the input pair (proof goal, program) as a single string using separator.
 Next, we randomly select 15% of the tokens in a data.
@@ -50,29 +55,26 @@ or kept unchanged (10% probability).
 The model is trained with the goal of predicting the original token of 15% of selected tokens.
 
 
-<!-- TODO: consider using special charactor as in CodeBERT
-[CLS], w1, w2, ..wn, [SEP ], c1, c2, ..., cm, [EOS]. One segment is natural lan- guage text, and another is code from a certain pro- gramming language. [CLS] is a special token in front of the two segments, whose final hidden repre- sentation is considered as the aggregated sequence representation for classification or ranking. Follow- ing the standard way of processing text in Trans- former, we regard a natural language text as a se- quence of words, and split it as WordPiece (Wu et al., 2016). We regard a piece of code as a se- quence of tokens. -->
+<!-- TODO: consider using special charactor as in CodeBERT? -->
 
 See `mlm.py` for more details.
 
 
 
 
-## Task-specific training (fine-tuning)
+## Method part2: Task-specific training (fine-tuning)
 
 We (currently) have only one task, which is lemma (function) recommendation.
-For this recommendation task, we fine-tune the pre-trained model using classification task.
 
+For this recommendation task, we fine-tune the pre-trained model using binary classification task.
+We rearrange dataset as (query, result).
+We use a function's proof goal (requires/ensures clauses) and their type signature as query.
+For result, entire function is used.
 
-For training, I simply utilized each function to connect proof goal and proof body.
-The rationale is that, a function's proof goal is clearly related to the function's proof body.
-
-
-TODO: Write how I did it
-
+For training data, I simply utilized each function to connect proof goal and proof body.
+The rationale is that, a function's proof goal is (obviously) related to the function's proof body.
 
 We utilized our model as a unified encoder (embedding query and candidate as a whole).
-
 
 See `recommend.py` for more details.
 
@@ -81,29 +83,20 @@ See `recommend.py` for more details.
 
 
 
-
-
 # Evaluation
 
-1. For each proof in library, extract function signature, which contains preconditions and postconditions.
+1. For each proof in library, extract function signature, which contains preconditions and postconditions. 
+   Note that we utilized our model as a unified encoder (embedding query and candidate as a whole).
 
-
-2. Based on the goal, get top 10 recommend lemmas out of 1000 lemmas
-We utilized our model as a unified encoder (embedding query and candidate as a whole).
-
-
-
+2. Based on the goal, get top 10 recommend lemmas out of 1000 lemmas. 
 
 3. Check if there is a lemma utilized in the proof body
-4. Successful recommendation for 47% of proofs 
 
-
+4. Successful recommendation for ~43% of proofs. We exclude a proof if it does not contain any lemma call from 1000 lemma pool.
   
-Q: CodeBERT-mlm, CodeBERT, DafnyBERT-mlm, DafnyBERT-rec  before dafny training    
-
+<!-- Q: CodeBERT-mlm, CodeBERT, DafnyBERT-mlm, DafnyBERT-rec  before dafny training     -->
 
 It seems that there is no prior work on Dafny regarding lemma/function recommendation.
-
 
 See `recommend-quant.py` for more details.
 

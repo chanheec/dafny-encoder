@@ -8,7 +8,7 @@ import os, json
 DATA_PATH = "/content/drive/MyDrive/dafny-encoder/dafny-data.json"
 MODEL_PATH = "/content/drive/MyDrive/dafny-encoder/dafny_lemma_recommender_bce"
 # MODEL_PATH = "/content/drive/MyDrive/dafny-encoder/dafny_lemma_recommender"
-OUTPUT_PATH = "/content/drive/MyDrive/dafny-encoder/recommendation_results.txt"
+OUTPUT_PATH = "/content/drive/MyDrive/dafny-encoder/recommendation_results_bce.txt"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
