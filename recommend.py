@@ -20,7 +20,7 @@ PRETRAINED_MODEL_PATH = "/content/drive/MyDrive/dafny-encoder/dafny_codebert_mlm
 # OUTPUT_DIR = "/content/drive/MyDrive/dafny-encoder/dafny_lemma_recommender"
 OUTPUT_DIR = "/content/drive/MyDrive/dafny-encoder/dafny_lemma_recommender_bce"
 
-USE_BCE_LOSS = True  # If False, use Mean Squared Error Loss
+USE_BCE_LOSS = False  # If False, use Mean Squared Error Loss
 
 MAX_LENGTH = 512
 BATCH_SIZE = 8
